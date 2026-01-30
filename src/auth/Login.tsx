@@ -19,14 +19,16 @@ export default function Login() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password, action: "signup" }),
+      body: JSON.stringify({ email, password, action: "login" }),
     });
     const data = await resp.json();
     if(!data.success){
+      alert("Login failed. Please try again.");
       setStatus("Login failed. Please check your credentials.");
       return;
     }
     if(!data.token){
+      alert("Token issue. Please try again.");
       setStatus("Token issue. Please try again.");
       return;
     }
@@ -48,7 +50,7 @@ export default function Login() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <input
@@ -56,7 +58,7 @@ export default function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black mb-6 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <button
@@ -68,7 +70,7 @@ export default function Login() {
 
         <p className="text-sm text-center mt-4">
           Don’t have an account?{" "}
-          <span className="text-blue-600 cursor-pointer">Sign up</span>
+          <span onClick={()=>navigate('/signup')} className="text-blue-600 cursor-pointer">Sign up</span>
         </p>
       </form>
     </div>

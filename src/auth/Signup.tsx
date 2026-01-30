@@ -23,10 +23,12 @@ export default function Signup() {
     });
     const data = await resp.json();
     if (!data.success) {
+      alert("Signup failed. Please try again.");
       setStatus("Signup failed. Please try again.");
       return;
     }
     if (!data.token) {
+      alert("Token issue. Please try again.");
       setStatus("Token issue. Please try again.");
       return;
     }
@@ -48,7 +50,7 @@ export default function Signup() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <input
@@ -56,7 +58,7 @@ export default function Signup() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full text-black mb-6 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <button

@@ -6,12 +6,11 @@ import ErrorModal from "../components/ErrorModal";
 import { UseSelector, useDispatch, useSelector } from "react-redux";
 import { setSiteBeingCreated } from "../redux/projectSlice";
 import { RootState } from "../redux/store";
-import callCloudinary from "../api/callCloudinary";
 import createWebsite from "../api/createWebsite";
 
 const TEXTLIMIT = 600;
 const STYLE = 'Modern';
-const listOfSections = ["Hero", "About", "Projects", "Services", "Contact","Education"];
+const listOfSections = ["Hero", "About", "Projects", "Services", "Contact", "Education"];
 
 export default function Website() {
   const [created, setCreated] = useState(false);
@@ -50,10 +49,28 @@ export default function Website() {
       setError('Website name and instructions cannot be empty');
       return;
     }
+    if (!localStorage.getItem('token')) {
+      alert('No token present. You are not authorized ! ');
+      navigate(ROUTES.HOME);
+      return;
+    }
+    const token = localStorage.getItem('token');
     // dispatch(setSiteBeingCreated(true));
-    const newProjs = await callCloudinary(userProjects);
+
+    // Call cloudinary
+    const resp = await fetch('https://3o2qjze6l4ui42nczgckctqldm0gpigu.lambda-url.us-east-1.on.aws/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        projects: userProjects
+      })
+    });
+    const newProjs = await resp.json();
     setUserProjects(newProjs);
-    await createWebsite(style ||'Modern', sections||[], name||'Portfolio Website', customInstructions||'', newProjs||[]);
+    await createWebsite(style || 'Modern', sections || [], name || 'Portfolio Website', customInstructions || '', newProjs || []);
   }
 
   if (beingCreated) {
@@ -150,7 +167,7 @@ export default function Website() {
         Click to enter details
       </button>
 
-      <button onClick={generateWebsite}>Generate Website !</button>
+      <button disabled={beingCreated} className="px-6 py-2 bg-green-500 rounded" onClick={generateWebsite}>Generate Website !</button>
     </div>
   );
 }

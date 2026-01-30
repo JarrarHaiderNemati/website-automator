@@ -24,15 +24,12 @@ async function callGemini(style, sections, websiteName, customInstructions, user
       videoUrls
     })
   });
-  const resp = await reqs.json();
-  console.log('Type of resp is', typeof resp);
-  let text = resp.output
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/```$/i, '')
-    .trim();
 
-  return text;
+  const resp = await reqs.text();
+  console.log('Gemini response text is ', resp);
+  console.log('Type of resp is', typeof resp);
+
+  return resp;
 }
 
 async function createWebsite(style, sections, websiteName, customInstructions, userProjects) {
@@ -51,6 +48,9 @@ async function createWebsite(style, sections, websiteName, customInstructions, u
     console.log('Creating....');
     const geminiResp = await callGemini(style, sections, websiteName, customInstructions, userProjects, photoUrls, videoUrls);
 
+    const parsedOutput = JSON.parse(geminiResp);
+    console.log('Parsed Gemini output is ', parsedOutput, ' and its type is ', typeof parsedOutput);
+
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -66,7 +66,13 @@ async function createWebsite(style, sections, websiteName, customInstructions, u
       },
       body: JSON.stringify({
         style,
-        sections,
+        about: parsedOutput.about,
+        hero: parsedOutput.hero,
+        websiteName,
+        projects:parsedOutput.projects,
+        services: parsedOutput.services,
+        education: parsedOutput.education,
+        contact: parsedOutput.contact,
       })
     });
     const chatData = await chat.json();

@@ -31,7 +31,7 @@ export default function Sidebar({ selected, setSelected }: SidebarProps) {
         {pages.map((page) => (
           <button
             key={page.name}
-            onClick={() => selectRoute(page.name)} // ✅ use selectRoute here
+            onClick={() => selectRoute(page.name)} // use selectRoute here
             className={`w-full flex items-center gap-3 px-6 py-3 text-lg
               ${selected === page.name
                 ? "bg-gray-700 text-white font-semibold"
