@@ -1,3 +1,5 @@
+import generateZip from "./generateZip";
+
 async function callGemini(style, sections, websiteName, customInstructions, userProjects, photoUrls, videoUrls) { //Extracts categories from the prompt and generate content first time of creating the website
   console.log('Before calling gemini , user projects are ', userProjects, ' photoUrls are ', photoUrls, ' videoUrls are ', videoUrls);
 
@@ -78,6 +80,8 @@ async function createWebsite(style, sections, websiteName, customInstructions, u
     const chatData = await chat.json();
     console.log('Chat data URL is ', chatData.url);
     console.log('Chat data files are ', chatData.files);
+
+    await generateZip(chatData.files);
 
     // const chat = await v0.chats.create({
     //   message: `You are an expert full stack web developer. A user has asked you to build his

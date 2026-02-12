@@ -15,7 +15,7 @@ export default function WebsiteOptions({ open, setOpen, userProjects, setUserPro
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-  const [projects, setProjects] = useState<{ name: string; description: string }[]>([]);
+  const [projects, setProjects] = useState<{ name: string; description: string }[]>(userProjects);
   const [image, setImage] = useState<File | null>(null);
   const [video, setVideo] = useState<File | null>(null);
 
@@ -25,9 +25,6 @@ export default function WebsiteOptions({ open, setOpen, userProjects, setUserPro
   const inputRef = useRef(null);
   const videoRef = useRef(null);
 
-  useEffect(() => {
-    setProjects(userProjects);
-  }, [])
 
   // Sets website name 
   const nameChange = (name: string) => {
@@ -71,7 +68,7 @@ export default function WebsiteOptions({ open, setOpen, userProjects, setUserPro
   //5 images
   const selectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || !e.target.files) return;
 
     setImage(e.target.files[0]);
   }
@@ -89,7 +86,7 @@ export default function WebsiteOptions({ open, setOpen, userProjects, setUserPro
   }
 
   const removeVideo = () => {
-    setVideo({});
+    setVideo(null);
   }
 
   // If not open, do not render anything

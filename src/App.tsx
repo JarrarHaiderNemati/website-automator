@@ -5,9 +5,9 @@ import CV from "./pages/CV";
 import Website from "./pages/Website";
 import DefaultPage from "./pages/DefaultPage";
 import ROUTES from "./constants/ROUTES";
-import WebsiteOptions from "./components/WebsiteOptions";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
+import { CreatorProvider } from "./context/CreatingSiteProvider";
 
 export default function App() {
   const [selected, setSelected] = useState("");
@@ -21,15 +21,17 @@ export default function App() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center">
-        <Routes>
-          <Route path={ROUTES.Home} element={<Login />} />
-          <Route path={ROUTES.Signup} element={<Signup />} />
-          <Route path={ROUTES.DefaultPage} element={<DefaultPage />} />
-          <Route path={ROUTES.Website} element={<Website />} />
-          <Route path={ROUTES.CV} element={<CV />} />
-        </Routes>
-      </main>
+      <CreatorProvider>
+        <main className="flex-1 flex items-center justify-center">
+          <Routes>
+            <Route path={ROUTES.Home} element={<Login />} />
+            <Route path={ROUTES.Signup} element={<Signup />} />
+            <Route path={ROUTES.Default} element={<DefaultPage />} />
+            <Route path={ROUTES.Website} element={<Website />} />
+            <Route path={ROUTES.CV} element={<CV />} />
+          </Routes>
+        </main>
+      </CreatorProvider>
     </div>
   );
 }

@@ -4,15 +4,25 @@ import ROUTES from "../constants/ROUTES";
 import WebsiteOptions from "../components/WebsiteOptions";
 import ErrorModal from "../components/ErrorModal";
 import { UseSelector, useDispatch, useSelector } from "react-redux";
-import { setSiteBeingCreated } from "../redux/projectSlice";
-import { RootState } from "../redux/store";
+import { setSiteBeingCreated } from "../context/projectSlice";
+import { RootState } from "../context/store";
 import createWebsite from "../api/createWebsite";
+import callCloudinary from "../api/callCloudinary";
+import { ClipLoader } from "react-spinners";
 
 const TEXTLIMIT = 600;
 const STYLE = 'Modern';
 const listOfSections = ["Hero", "About", "Projects", "Services", "Contact", "Education"];
 
 export default function Website() {
+  // return (
+  //   <div className="loading-container">
+  //     <ClipLoader color="#36d7b7" size={50} />
+  //     <p>Creating website</p>
+  //   </div>
+  // )
+
+
   const [created, setCreated] = useState(false);
   const [style, setStyle] = useState(STYLE);
   const [customInstructions, setCustomInstructions] = useState("");
@@ -54,21 +64,14 @@ export default function Website() {
       navigate(ROUTES.HOME);
       return;
     }
-    const token = localStorage.getItem('token');
-    // dispatch(setSiteBeingCreated(true));
+    dispatch(setSiteBeingCreated(true));
+
+    const temppp = userProjects[0];
+    console.log('IMAGE is  : ', temppp.image instanceof File, ' and ', temppp.image instanceof Blob, ' VIDEO : ', temppp.video instanceof File, ' and', temppp.video instanceof Blob);
+
 
     // Call cloudinary
-    const resp = await fetch('https://3o2qjze6l4ui42nczgckctqldm0gpigu.lambda-url.us-east-1.on.aws/', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        projects: userProjects
-      })
-    });
-    const newProjs = await resp.json();
+    const newProjs = await callCloudinary(userProjects);
     setUserProjects(newProjs);
     await createWebsite(style || 'Modern', sections || [], name || 'Portfolio Website', customInstructions || '', newProjs || []);
   }
